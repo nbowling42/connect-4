@@ -4,9 +4,9 @@
  * column until a player gets four-in-a-row (horiz, vert, or diag) or until
  * board fills (tie)
  */
-let board = []; // array of rows, each row is array of cells  (board[y][x])
-let WIDTH = 7;
-let HEIGHT = 6;
+const board = []; // array of rows, each row is array of cells  (board[y][x])
+const WIDTH = 7;
+const HEIGHT = 6;
 let currPlayer = 1; // active player: 1 or 2
 
 /** makeBoard: create in-JS board structure:
@@ -19,6 +19,16 @@ function makeBoard() {
     board.push(row);
   }; return board;
 };
+
+// Function to remove a piece from the htmlBoard and the in-memory game board for easier testing
+function removePiece(y,x) {
+  const boardPosition = document.getElementById(`${y}-${x}`);
+  const piece = document.querySelector('.piece');
+  if(piece) {
+    boardPosition.removeChild(piece);
+    board[y][x] = null;
+  }
+}
 /** makeHtmlBoard: make HTML table and row of column tops. */
 
 function makeHtmlBoard() {
@@ -82,7 +92,7 @@ function handleClick(evt) {
   // get x from ID of clicked cell
   const x = +evt.target.id;
   // get next spot in column (if none, ignore click)
-  var y = findSpotForCol(x);
+  const y = findSpotForCol(x);
   if (y === null) {
     return;
   } 
@@ -96,12 +106,13 @@ function handleClick(evt) {
   }
 
   // check for tie
-  let completeBoard = [].concat.apply([], board)
-  completeBoard.every((val) => {
-    if(typeof(val) === 'number') {
-      endGame("It's a tie!")
-    }
-  })
+  function checkForTie(val) {
+    return val !== null;
+  }
+  const completeBoard = [].concat.apply([], board)
+  if(completeBoard.every(checkForTie)) {
+    endGame("It's a tie!")
+  }
 
   // switch players
   currPlayer === 1 ? currPlayer = 2 : currPlayer = 1

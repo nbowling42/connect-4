@@ -20,3 +20,7 @@ describe("Find the correct y-coordinate using findSpotForCol(x)", () => {
         expect(findSpotForCol(4)).toEqual(4);
     })
 })
+
+afterEach(() => {
+    removePiece(5,4);
+})
